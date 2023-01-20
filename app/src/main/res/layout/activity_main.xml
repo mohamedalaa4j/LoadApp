@@ -18,6 +18,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        
+        <com.mohamedalaa4j.loadapp.LoadingButton
+            android:id="@+id/custom_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -26,7 +36,8 @@
             android:layout_height="wrap_content"
             android:indeterminate="false"
             android:minHeight="50dp"
-            android:minWidth="200dp"
+            android:visibility="gone"
+            android:minWidth="300dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
