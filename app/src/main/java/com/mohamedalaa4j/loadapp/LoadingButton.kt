@@ -6,7 +6,9 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -14,9 +16,18 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
     private var widthSize = 0
     private var heightSize = 0
 
-    private val valueAnimator = ValueAnimator()
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    private var progress = 0
+    var progressPercentage = progress.toDouble() / 100
 
+    private val valueAnimator = ValueAnimator()
+    var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { _, _, new ->
+        when (new) {
+            ButtonState.Clicked -> {}
+            ButtonState.Loading -> {
+                postInvalidate()
+            }
+            ButtonState.Completed -> {}
+        }
     }
 
     // Paint object
@@ -28,6 +39,10 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
     private var textColor = context.getColor(R.color.white)
 
     init {
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            progress = getColor(R.styleable.LoadingButton_progress, 0)
+        }
+
 
     }
 
@@ -37,6 +52,7 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
 
         drawBackground(canvas!!)
     }
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
@@ -57,7 +73,7 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
         // Draw the filling button progress
         paint.color = buttonFillingColor
         paint.style = Paint.Style.FILL
-        canvas.drawRoundRect(0f, 0f, (widthSize * 0.25).toFloat(), heightSize.toFloat(), 20f, 20f, paint)
+        canvas.drawRoundRect(0f, 0f, (widthSize * progressPercentage).toFloat(), heightSize.toFloat(), 20f, 20f, paint)
 
         paint.color = textColor
         paint.textSize = 50f

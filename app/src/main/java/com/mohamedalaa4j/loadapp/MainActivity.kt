@@ -23,12 +23,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvDownload.setOnClickListener { download() }
+        binding.tvDownload.setOnClickListener {
+            download()
+        }
 
     }
 
     private fun download() {
-        val request = DownloadManager.Request(Uri.parse(RETROFIT_URL))
+        val request = DownloadManager.Request(Uri.parse(ND940U_URL))
             .setTitle(getString(R.string.app_name))
             .setDescription(getString(R.string.app_description))
             .setRequiresCharging(false)
@@ -53,7 +55,8 @@ class MainActivity : AppCompatActivity() {
             val progress = (bytesDownloaded * 100L) / bytesTotal
 
             if (progress >= 0L) {
-                binding.progressBar.progress = progress.toInt()
+                binding.customButton.progressPercentage = progress.toDouble() / 100
+                binding.customButton.buttonState = ButtonState.Loading
                 Log.e("progress", progress.toString())
             }
 
