@@ -10,7 +10,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mohamedalaa4j.loadapp.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -23,14 +26,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tvDownload.setOnClickListener {
-            download()
+        binding.customButton.setOnClickListener {
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                download()
+            }
         }
 
     }
 
     private fun download() {
-        val request = DownloadManager.Request(Uri.parse(ND940U_URL))
+        val request = DownloadManager.Request(Uri.parse(GLIDE_URL))
             .setTitle(getString(R.string.app_name))
             .setDescription(getString(R.string.app_description))
             .setRequiresCharging(false)
@@ -38,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             .setAllowedOverRoaming(true)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
         downloadID = downloadManager.enqueue(request)
         downloading = true
 
@@ -47,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         while (downloading) {
             val query = DownloadManager.Query().setFilterById(downloadID)
             val cursor = downloadManager.query(query)
+
             cursor.moveToFirst()
 
             val bytesDownloaded = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
@@ -71,7 +79,8 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             if (id == downloadID) {
-                Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show()
+                binding.customButton.buttonState = ButtonState.Completed
             }
         }
     }

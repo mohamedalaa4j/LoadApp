@@ -16,17 +16,26 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
     private var widthSize = 0
     private var heightSize = 0
 
-    private var progress = 0
-    var progressPercentage = progress.toDouble() / 100
+    var progressPercentage = 0.0
+
+    var labelText = context.getString(R.string.download)
 
     private val valueAnimator = ValueAnimator()
     var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { _, _, new ->
         when (new) {
-            ButtonState.Clicked -> {}
-            ButtonState.Loading -> {
-                postInvalidate()
+            ButtonState.Clicked -> {
             }
-            ButtonState.Completed -> {}
+
+            ButtonState.Loading -> {
+                labelText = context.getString(R.string.downloading)
+                invalidate()
+            }
+
+            ButtonState.Completed -> {
+                progressPercentage = 0.0
+                labelText = context.getString(R.string.done)
+                invalidate()
+            }
         }
     }
 
@@ -39,11 +48,26 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
     private var textColor = context.getColor(R.color.white)
 
     init {
+        labelText = context.getString(R.string.download)
+        isClickable = true
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
-            progress = getColor(R.styleable.LoadingButton_progress, 0)
+//            progress = getColor(R.styleable.LoadingButton_progress, 0)
         }
 
 
+    }
+
+    override fun performClick(): Boolean {
+        if (super.performClick()) return true
+
+        invalidate()
+
+        return true
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+//        progressPercentage = 0.0
     }
 
 
@@ -51,6 +75,9 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
         super.onDraw(canvas)
 
         drawBackground(canvas!!)
+        drawProgress(canvas)
+        drawText(canvas)
+
     }
 
 
@@ -69,17 +96,23 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
         paint.color = buttonBackgroundColor
         paint.style = Paint.Style.FILL
         canvas.drawRoundRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), 20f, 20f, paint)
+    }
+
+    private fun drawProgress(canvas: Canvas) {
 
         // Draw the filling button progress
         paint.color = buttonFillingColor
         paint.style = Paint.Style.FILL
         canvas.drawRoundRect(0f, 0f, (widthSize * progressPercentage).toFloat(), heightSize.toFloat(), 20f, 20f, paint)
+        Log.e("progressPercentage", progressPercentage.toString())
+    }
 
+    private fun drawText(canvas: Canvas) {
         paint.color = textColor
         paint.textSize = 50f
         paint.typeface = Typeface.DEFAULT_BOLD
-        canvas.drawText(context.getString(R.string.download), (widthSize / 3).toFloat(), (heightSize / 2).toFloat(), paint)
-
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText(labelText, (widthSize / 2).toFloat(), (heightSize / 2).toFloat(), paint)
     }
 
 }
