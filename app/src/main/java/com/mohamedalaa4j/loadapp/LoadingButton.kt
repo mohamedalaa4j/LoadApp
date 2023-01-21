@@ -21,6 +21,7 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
     var labelText = context.getString(R.string.download)
 
     private val valueAnimator = ValueAnimator()
+
     var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { _, _, new ->
         when (new) {
             ButtonState.Clicked -> {
@@ -32,8 +33,13 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
             }
 
             ButtonState.Completed -> {
-                progressPercentage = 0.0
                 labelText = context.getString(R.string.done)
+                invalidate()
+            }
+
+            ButtonState.AnotherDownload -> {
+                progressPercentage = 0.0
+                labelText = context.getString(R.string.download)
                 invalidate()
             }
         }
@@ -57,27 +63,12 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
 
     }
 
-    override fun performClick(): Boolean {
-        if (super.performClick()) return true
-
-        invalidate()
-
-        return true
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-//        progressPercentage = 0.0
-    }
-
-
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
         drawBackground(canvas!!)
         drawProgress(canvas)
         drawText(canvas)
-
     }
 
 
@@ -121,4 +112,5 @@ sealed class ButtonState {
     object Clicked : ButtonState()
     object Loading : ButtonState()
     object Completed : ButtonState()
+    object AnotherDownload : ButtonState()
 }

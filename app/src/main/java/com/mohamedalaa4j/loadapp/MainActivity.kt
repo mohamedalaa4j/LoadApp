@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var repoUrl: String
     private var downloadID: Long = 0
     private var downloading = false
 
@@ -28,15 +29,38 @@ class MainActivity : AppCompatActivity() {
 
         binding.customButton.setOnClickListener {
 
-            lifecycleScope.launch(Dispatchers.IO) {
-                download()
+            if (binding.rbNd940C3.isChecked || binding.rbRetrofit.isChecked || binding.rbGlide.isChecked) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    download()
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.choose_a_repository), Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.radioGroup.setOnCheckedChangeListener { _, id ->
+            when (id) {
+                R.id.rbNd940_c3 -> {
+                    repoUrl = ND940U_URL
+                    binding.customButton.buttonState = ButtonState.AnotherDownload
+                }
+                R.id.rbRetrofit -> {
+                    repoUrl = RETROFIT_URL
+                    binding.customButton.buttonState = ButtonState.AnotherDownload
+                }
+                R.id.rbGlide -> {
+                    repoUrl = GLIDE_URL
+                    binding.customButton.buttonState = ButtonState.AnotherDownload
+                }
+
+            }
+        }
+
 
     }
 
     private fun download() {
-        val request = DownloadManager.Request(Uri.parse(GLIDE_URL))
+        val request = DownloadManager.Request(Uri.parse(repoUrl))
             .setTitle(getString(R.string.app_name))
             .setDescription(getString(R.string.app_description))
             .setRequiresCharging(false)
@@ -65,7 +89,6 @@ class MainActivity : AppCompatActivity() {
             if (progress >= 0L) {
                 binding.customButton.progressPercentage = progress.toDouble() / 100
                 binding.customButton.buttonState = ButtonState.Loading
-                Log.e("progress", progress.toString())
             }
 
             if (cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
@@ -79,7 +102,6 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             if (id == downloadID) {
-//                Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show()
                 binding.customButton.buttonState = ButtonState.Completed
             }
         }

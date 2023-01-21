@@ -14,4 +14,12 @@
     <string name="done">Done!</string>
     <string name="button_loading">We are loading </string>
     <string name="title_activity_detail">DetailActivity</string>
+
+    <string name="choose_a_repository">Choose a repository</string>
+
+    <string name="nd940_c3">nd940-c3</string>
+    <string name="retrofit">Retrofit</string>
+    <string name="glide">Glide</string>
+
+
 </resources>
