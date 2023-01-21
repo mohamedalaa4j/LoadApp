@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                 lifecycleScope.launch(Dispatchers.IO) {
                     download()
                 }
+                binding.customButton.buttonState = ButtonState.Clicked
             } else {
                 Toast.makeText(this, getString(R.string.choose_a_repository), Toast.LENGTH_SHORT).show()
             }
@@ -89,10 +91,13 @@ class MainActivity : AppCompatActivity() {
                 if (progress >= 0L) {
                     binding.customButton.progressPercentage = progress.toDouble() / 100
                     binding.customButton.buttonState = ButtonState.Loading
+
+                    Log.e("progress",(progress.toDouble() / 100).toString())
                 }
 
                 if (cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
                     downloading = false
+                    binding.customButton.buttonState = ButtonState.Reset
                 }
 
             } catch (e: Exception) {
