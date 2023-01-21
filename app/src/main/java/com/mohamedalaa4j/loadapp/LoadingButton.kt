@@ -18,7 +18,7 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
 
     var progressPercentage = 0.0
 
-    var labelText = context.getString(R.string.download)
+    private var labelText = context.getString(R.string.download)
 
     private val valueAnimator = ValueAnimator()
 
@@ -49,18 +49,20 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // Colors
-    private var buttonBackgroundColor = context.getColor(R.color.background)
-    private var buttonFillingColor = context.getColor(R.color.purple_700)
-    private var textColor = context.getColor(R.color.white)
+    private var buttonBackgroundColor = 0
+    private var buttonFillingColor = 0
+    private var textColor = 0
 
     init {
-        labelText = context.getString(R.string.download)
         isClickable = true
+        labelText = context.getString(R.string.download)
+
+        // Assign the custom Attributes values
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
-//            progress = getColor(R.styleable.LoadingButton_progress, 0)
+            buttonBackgroundColor = getColor(R.styleable.LoadingButton_buttonBackgroundColor, context.getColor(R.color.background))
+            buttonFillingColor = getColor(R.styleable.LoadingButton_buttonProgressColor, context.getColor(R.color.purple_700))
+            textColor = getColor(R.styleable.LoadingButton_buttonTextColor, context.getColor(R.color.white))
         }
-
-
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -70,7 +72,6 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
         drawProgress(canvas)
         drawText(canvas)
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
@@ -105,7 +106,6 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
         paint.textAlign = Paint.Align.CENTER
         canvas.drawText(labelText, (widthSize / 2).toFloat(), (heightSize / 2).toFloat(), paint)
     }
-
 }
 
 sealed class ButtonState {

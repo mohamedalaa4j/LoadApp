@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.radioGroup.setOnCheckedChangeListener { _, id ->
             when (id) {
-                R.id.rbNd940_c3 -> {
+                binding.rbNd940C3.id -> {
                     repoUrl = ND940U_URL
                     binding.customButton.buttonState = ButtonState.Reset
                 }
-                R.id.rbRetrofit -> {
+                binding.rbRetrofit.id -> {
                     repoUrl = RETROFIT_URL
                     binding.customButton.buttonState = ButtonState.Reset
                 }
-                R.id.rbGlide -> {
+                binding.rbGlide.id -> {
                     repoUrl = GLIDE_URL
                     binding.customButton.buttonState = ButtonState.Reset
                 }
