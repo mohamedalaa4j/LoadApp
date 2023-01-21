@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -42,15 +41,15 @@ class MainActivity : AppCompatActivity() {
             when (id) {
                 R.id.rbNd940_c3 -> {
                     repoUrl = ND940U_URL
-                    binding.customButton.buttonState = ButtonState.AnotherDownload
+                    binding.customButton.buttonState = ButtonState.Reset
                 }
                 R.id.rbRetrofit -> {
                     repoUrl = RETROFIT_URL
-                    binding.customButton.buttonState = ButtonState.AnotherDownload
+                    binding.customButton.buttonState = ButtonState.Reset
                 }
                 R.id.rbGlide -> {
                     repoUrl = GLIDE_URL
-                    binding.customButton.buttonState = ButtonState.AnotherDownload
+                    binding.customButton.buttonState = ButtonState.Reset
                 }
 
             }
@@ -79,20 +78,26 @@ class MainActivity : AppCompatActivity() {
             val query = DownloadManager.Query().setFilterById(downloadID)
             val cursor = downloadManager.query(query)
 
-            cursor.moveToFirst()
+            try {
+                cursor.moveToFirst()
 
-            val bytesDownloaded = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-            val bytesTotal = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                val bytesDownloaded = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                val bytesTotal = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
 
-            val progress = (bytesDownloaded * 100L) / bytesTotal
+                val progress = (bytesDownloaded * 100L) / bytesTotal
 
-            if (progress >= 0L) {
-                binding.customButton.progressPercentage = progress.toDouble() / 100
-                binding.customButton.buttonState = ButtonState.Loading
-            }
+                if (progress >= 0L) {
+                    binding.customButton.progressPercentage = progress.toDouble() / 100
+                    binding.customButton.buttonState = ButtonState.Loading
+                }
 
-            if (cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                if (cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                    downloading = false
+                }
+
+            } catch (e: Exception) {
                 downloading = false
+                binding.customButton.buttonState = ButtonState.Reset
             }
         }
     }

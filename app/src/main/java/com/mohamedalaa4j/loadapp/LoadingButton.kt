@@ -37,7 +37,7 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
                 invalidate()
             }
 
-            ButtonState.AnotherDownload -> {
+            ButtonState.Reset -> {
                 progressPercentage = 0.0
                 labelText = context.getString(R.string.download)
                 invalidate()
@@ -112,5 +112,5 @@ sealed class ButtonState {
     object Clicked : ButtonState()
     object Loading : ButtonState()
     object Completed : ButtonState()
-    object AnotherDownload : ButtonState()
+    object Reset : ButtonState()
 }
