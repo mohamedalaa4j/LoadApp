@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.mohamedalaa4j.loadapp.databinding.ActivityMainBinding
+import com.mohamedalaa4j.loadapp.utilities.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fileName: String
     private var downloadID: Long = 0
     private var downloading = false
+    private var downloadStatus = "Failed"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,16 +98,21 @@ class MainActivity : AppCompatActivity() {
                 val progress = (bytesDownloaded * 100L) / bytesTotal
 
                 if (progress >= 0L) {
+
+                    // Update download progress
                     binding.customButton.progressPercentage = progress.toDouble() / 100
                     binding.customButton.buttonState = ButtonState.Loading
                 }
 
                 if (cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
                     downloading = false
+                    downloadStatus = "Successful"
                     binding.customButton.buttonState = ButtonState.Completed
+                } else {
+                    downloadStatus = "Failed"
                 }
 
-            } catch (e: Exception) {
+            } catch (e: Exception) { // Handel download canceling
                 downloading = false
             }
         }
@@ -118,13 +125,14 @@ class MainActivity : AppCompatActivity() {
 
             if (id == downloadID) {
                 binding.customButton.buttonState = ButtonState.Completed
-                sendDownloadFinishedNotification(fileName, "Successful")
+                sendDownloadFinishedNotification(fileName, downloadStatus)
             }
-
         }
     }
 
     private fun createNotificationChannel() {
+
+        // Create channel for notification if the android version is Oreo or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)
@@ -140,6 +148,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendDownloadFinishedNotification(filename: String, status: String) {
+
+        // NotificationManager instance
         val notificationManager = ContextCompat.getSystemService(
             this@MainActivity,
             NotificationManager::class.java

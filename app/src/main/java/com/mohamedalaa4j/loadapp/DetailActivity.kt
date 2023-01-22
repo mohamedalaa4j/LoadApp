@@ -1,8 +1,7 @@
 package com.mohamedalaa4j.loadapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.mohamedalaa4j.loadapp.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
@@ -19,6 +18,11 @@ class DetailActivity : AppCompatActivity() {
         binding.tvFileNameValue.text = fileName
         binding.tvStatusValue.text = status
 
+        if (status == "Failed") binding.tvStatusValue.setTextColor(getColor(R.color.red))
 
+        binding.btnOk.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
     }
 }

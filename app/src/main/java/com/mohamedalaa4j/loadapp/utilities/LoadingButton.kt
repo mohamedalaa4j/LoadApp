@@ -1,4 +1,4 @@
-package com.mohamedalaa4j.loadapp
+package com.mohamedalaa4j.loadapp.utilities
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -7,9 +7,9 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.core.content.withStyledAttributes
+import com.mohamedalaa4j.loadapp.R
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -61,13 +61,13 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
         duration = 500
         repeatMode = ValueAnimator.REVERSE
         repeatCount = ValueAnimator.INFINITE
+
         addUpdateListener {
             val percentage = it.animatedValue
             arcPercentage = percentage.toString().toFloat()
             invalidate()
         }
     }
-
 
     init {
         isClickable = true

@@ -27,5 +27,6 @@
 
     <string name="file_name">File Name:</string>
     <string name="status">Status:</string>
+    <string name="ok">ok</string>
 
 </resources>

@@ -46,7 +46,7 @@
 
         </RadioGroup>
 
-        <com.mohamedalaa4j.loadapp.LoadingButton
+        <com.mohamedalaa4j.loadapp.utilities.LoadingButton
             android:id="@+id/custom_button"
             android:layout_width="0dp"
             android:layout_height="60dp"

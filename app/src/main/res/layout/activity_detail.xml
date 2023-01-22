@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DetailActivity">
+        app:layoutDescription="@xml/activity_detail_motion">
 
         <TextView
             android:id="@+id/tvFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="50dp"
             android:text="@string/file_name"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -38,11 +38,10 @@
             android:layout_margin="15dp"
             android:textSize="22sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tvFileName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvFileName"
-            app:layout_constraintTop_toTopOf="@id/tvFileName"
-            app:layout_constraintBottom_toBottomOf="@id/tvFileName"
-            />
+            app:layout_constraintTop_toTopOf="@id/tvFileName" />
 
         <TextView
             android:id="@+id/tvStatusValue"
@@ -50,10 +49,19 @@
             android:layout_height="wrap_content"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tvFileNameValue"
-            app:layout_constraintTop_toTopOf="@id/tvStatus"
             app:layout_constraintBottom_toBottomOf="@id/tvStatus"
-            />
+            app:layout_constraintStart_toStartOf="@id/tvFileNameValue"
+            app:layout_constraintTop_toTopOf="@id/tvStatus" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/ok"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>
