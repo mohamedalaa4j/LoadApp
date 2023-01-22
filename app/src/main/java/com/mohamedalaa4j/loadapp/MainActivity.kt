@@ -1,15 +1,19 @@
 package com.mohamedalaa4j.loadapp
 
 import android.app.DownloadManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.mohamedalaa4j.loadapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
+        createNotificationChannel()
     }
 
     private fun download() {
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        // Progress
+        //region Download progress analysing
         while (downloading) {
             val query = DownloadManager.Query().setFilterById(downloadID)
             val cursor = downloadManager.query(query)
@@ -91,20 +95,18 @@ class MainActivity : AppCompatActivity() {
                 if (progress >= 0L) {
                     binding.customButton.progressPercentage = progress.toDouble() / 100
                     binding.customButton.buttonState = ButtonState.Loading
-
-                    Log.e("progress",(progress.toDouble() / 100).toString())
                 }
 
                 if (cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
                     downloading = false
-                    binding.customButton.buttonState = ButtonState.Reset
+                    binding.customButton.buttonState = ButtonState.Completed
                 }
 
             } catch (e: Exception) {
                 downloading = false
-                binding.customButton.buttonState = ButtonState.Reset
             }
         }
+        //endregion
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -113,8 +115,33 @@ class MainActivity : AppCompatActivity() {
 
             if (id == downloadID) {
                 binding.customButton.buttonState = ButtonState.Completed
+                sendDownloadFinishedNotification()
             }
         }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun sendDownloadFinishedNotification(){
+        val notificationManager = ContextCompat.getSystemService(
+            this@MainActivity,
+            NotificationManager::class.java
+        ) as NotificationManager
+
+        notificationManager.sendNotification(getString(R.string.download_finished), this@MainActivity)
     }
 
 }

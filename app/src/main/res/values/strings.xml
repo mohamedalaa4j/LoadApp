@@ -16,10 +16,13 @@
     <string name="title_activity_detail">DetailActivity</string>
 
     <string name="choose_a_repository">Choose a repository</string>
+    <string name="download_finished">Download Finished!</string>
 
     <string name="nd940_c3">nd940-c3</string>
     <string name="retrofit">Retrofit</string>
     <string name="glide">Glide</string>
+    <string name="channel_name">Download channel</string>
+    <string name="channel_description">Download notification channel</string>
 
 
 </resources>

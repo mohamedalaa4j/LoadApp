@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
@@ -44,7 +45,6 @@ class LoadingButton @JvmOverloads constructor(context: Context, attrs: Attribute
             ButtonState.Completed -> {
                 labelText = context.getString(R.string.done)
                 valueAnimator.end()
-                invalidate()
             }
 
             ButtonState.Reset -> {
