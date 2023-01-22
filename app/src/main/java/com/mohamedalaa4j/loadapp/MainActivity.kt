@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var repoUrl: String
+    private lateinit var fileName: String
     private var downloadID: Long = 0
     private var downloading = false
 
@@ -48,14 +48,17 @@ class MainActivity : AppCompatActivity() {
                 binding.rbNd940C3.id -> {
                     repoUrl = ND940U_URL
                     binding.customButton.buttonState = ButtonState.Reset
+                    fileName = "nd940u"
                 }
                 binding.rbRetrofit.id -> {
                     repoUrl = RETROFIT_URL
                     binding.customButton.buttonState = ButtonState.Reset
+                    fileName = "Retrofit"
                 }
                 binding.rbGlide.id -> {
                     repoUrl = GLIDE_URL
                     binding.customButton.buttonState = ButtonState.Reset
+                    fileName = "Glide"
                 }
 
             }
@@ -115,8 +118,9 @@ class MainActivity : AppCompatActivity() {
 
             if (id == downloadID) {
                 binding.customButton.buttonState = ButtonState.Completed
-                sendDownloadFinishedNotification()
+                sendDownloadFinishedNotification(fileName, "Successful")
             }
+
         }
     }
 
@@ -135,13 +139,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendDownloadFinishedNotification(){
+    private fun sendDownloadFinishedNotification(filename: String, status: String) {
         val notificationManager = ContextCompat.getSystemService(
             this@MainActivity,
             NotificationManager::class.java
         ) as NotificationManager
 
-        notificationManager.sendNotification(getString(R.string.download_finished), this@MainActivity)
+        notificationManager.sendNotification(getString(R.string.download_finished), this@MainActivity, filename, status)
     }
 
 }

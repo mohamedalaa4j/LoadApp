@@ -25,4 +25,7 @@
     <string name="channel_description">Download notification channel</string>
 
 
+    <string name="file_name">File Name:</string>
+    <string name="status">Status:</string>
+
 </resources>
